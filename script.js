@@ -1,4 +1,8 @@
 const elVideo = document.getElementById('video')
+const startRecognitionBtn = document.getElementById('startRecognition');
+const takePhotoBtn = document.getElementById('takePhoto');
+let intervalo;
+
 
 navigator.getMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia)
 
@@ -62,3 +66,27 @@ elVideo.addEventListener('play', async () => {
         })
     })
 })
+
+// Función para detener el ciclo de detección de caras
+function detenerReconocimiento() {
+    clearInterval(intervalo);
+    const canvas = document.querySelector('canvas');
+    if (canvas) canvas.remove();
+  }
+
+  async function tomarFoto() {
+    // Detener el video
+    elVideo.pause();
+    elVideo.srcObject.getVideoTracks().forEach(track => track.stop());
+}
+  
+  // Evento clic para activar el reconocimiento facial
+  startRecognitionBtn.addEventListener('click', () => {
+    detenerReconocimiento(); // Detener el ciclo actual antes de iniciar uno nuevo
+    cargarCamera();
+  });
+  
+  // Evento clic para tomar foto
+  takePhotoBtn.addEventListener('click', () => {
+    tomarFoto();
+  });
